@@ -9,5 +9,13 @@ namespace Job_candidate_hub_API.Data
         {
         }
         public DbSet<Candidate> Candidates { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Candidate>(entity =>
+            {
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
+        }
     }
 }

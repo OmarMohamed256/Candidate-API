@@ -16,6 +16,6 @@ namespace Job_candidate_hub_API.Models
         public TimeSpan? PreferredCallTime { get; set; }
         public string LinkedInProfileUrl { get; set; }
         public string GitHubProfileUrl { get; set; }
-        public string Comment { get; set; } // Free text comment
+        public string Comment { get; set; }
     }
 }
