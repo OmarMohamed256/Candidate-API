@@ -1,7 +1,6 @@
 ﻿using Job_candidate_hub_API.Data;
 using Job_candidate_hub_API.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Job_candidate_hub_API.Repositories
 {
@@ -23,11 +22,17 @@ namespace Job_candidate_hub_API.Repositories
         {
             return await _context.Candidates.FirstOrDefaultAsync(c => c.Email == email);
         }
-
         public void UpdateCandidate(Candidate candidate)
         {
-            _context.Candidates.Update(candidate);
+            var trackedCandidate = _context.Candidates.Local.FirstOrDefault(c => c.Email == candidate.Email);
+            if (trackedCandidate == null)
+            {
+                _context.Candidates.Attach(candidate);
+                _context.Entry(candidate).State = EntityState.Modified;
+            }
+            else _context.Entry(trackedCandidate).CurrentValues.SetValues(candidate);
         }
+
         public async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
