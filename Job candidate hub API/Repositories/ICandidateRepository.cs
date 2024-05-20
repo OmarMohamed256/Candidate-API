@@ -6,7 +6,7 @@ namespace Job_candidate_hub_API.Repositories
     {
         Task<Candidate> GetCandidateByEmailAsync(string email);
         Task AddCandidateAsync(Candidate candidate);
-        void UpdateCandidateAsync(Candidate candidate);
+        void UpdateCandidate(Candidate candidate);
         Task<bool> SaveAllAsync();
     }
 }

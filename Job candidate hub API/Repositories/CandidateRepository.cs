@@ -24,7 +24,7 @@ namespace Job_candidate_hub_API.Repositories
             return await _context.Candidates.FirstOrDefaultAsync(c => c.Email == email);
         }
 
-        public void UpdateCandidateAsync(Candidate candidate)
+        public void UpdateCandidate(Candidate candidate)
         {
             _context.Candidates.Update(candidate);
         }
