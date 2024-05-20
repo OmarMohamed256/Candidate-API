@@ -20,7 +20,7 @@ namespace Job_candidate_hub_API.Services
             if (!RegexUtilities.IsValidEmail(candidateDto.Email)) 
                 throw new ArgumentException("Invalid email format", nameof(candidateDto.Email));
 
-            var existingCandidate = await GetCandidateByEmailAsync(candidateDto.Email);
+            var existingCandidate = await _candidateRepository.GetCandidateByEmailAsync(candidateDto.Email);
 
             if (existingCandidate != null)
             {
@@ -32,7 +32,7 @@ namespace Job_candidate_hub_API.Services
                 existingCandidate.GitHubProfileUrl = candidateDto.GitHubProfileUrl;
                 existingCandidate.Comment = candidateDto.Comment;
                 
-                _candidateRepository.UpdateCandidate(CandidateMapper.ToEntity(existingCandidate));
+                _candidateRepository.UpdateCandidate(existingCandidate);
             }
             else
                 await _candidateRepository.AddCandidateAsync(CandidateMapper.ToEntity(candidateDto));
@@ -40,14 +40,6 @@ namespace Job_candidate_hub_API.Services
             var result = await _candidateRepository.SaveAllAsync();
             if (result) return candidateDto;
             throw new ArgumentException("Failed to add/update candidate");
-        }
-
-        public async Task<CandidateDto> GetCandidateByEmailAsync(string email)
-        {
-            var candidate = await _candidateRepository.GetCandidateByEmailAsync(email);
-            if(candidate != null)
-               return CandidateMapper.ToDto(candidate);
-            return null;
         }
     }
 }

@@ -5,6 +5,5 @@ namespace Job_candidate_hub_API.Services
     public interface ICandidateService
     {
         Task<CandidateDto> CreateUpdateCandidateAsync(CandidateDto candidateDto);
-        Task<CandidateDto> GetCandidateByEmailAsync(string email);
     }
 }

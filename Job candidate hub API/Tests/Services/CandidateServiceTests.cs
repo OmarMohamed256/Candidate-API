@@ -13,10 +13,6 @@ namespace Job_candidate_hub_API.Tests.Services
     {
         private Mock<ICandidateRepository> _mockCandidateRepository;
         private ICandidateService _candidateService;
-        private CandidateDto _expectedCandidateDto;
-        private Candidate _existingCandidateEntity;
-        private int _nextTestId = 1;
-
         [SetUp]
         public void Setup()
         {
@@ -24,49 +20,6 @@ namespace Job_candidate_hub_API.Tests.Services
             _candidateService = new CandidateService(_mockCandidateRepository.Object);
         }
 
-        [Test]
-        public async Task GetCandidateByEmailAsync_CandidateExists_ReturnsCandidateDto()
-        {
-            // Arrange
-            _expectedCandidateDto = new CandidateDto
-            {
-                Email = "test@example.com",
-                FirstName = "John",
-                LastName = "Doe",
-                PhoneNumber = "1234567890",
-            };
-
-            _existingCandidateEntity = new Candidate
-            {
-                Id = _nextTestId++,
-                Email = _expectedCandidateDto.Email,
-                FirstName = _expectedCandidateDto.FirstName,
-                LastName = _expectedCandidateDto.LastName,
-                PhoneNumber = _expectedCandidateDto.PhoneNumber,
-            };
-            _mockCandidateRepository.Setup(repo => repo.GetCandidateByEmailAsync(It.IsAny<string>()))
-                                   .ReturnsAsync(_existingCandidateEntity);
-
-            // Act
-            var result = await _candidateService.GetCandidateByEmailAsync(_existingCandidateEntity.Email);
-
-            // Assert
-            ClassicAssert.NotNull(result);
-            ClassicAssert.AreEqual(_expectedCandidateDto.Email, result.Email);
-        }
-        [Test]
-        public async Task GetCandidateByEmailAsync_CandidateDoesNotExist_ReturnsNull()
-        {
-            // Arrange
-            _mockCandidateRepository.Setup(repo => repo.GetCandidateByEmailAsync(It.IsAny<string>()))
-                                  .ReturnsAsync((Candidate)null);
-
-            // Act
-            var result = await _candidateService.GetCandidateByEmailAsync("nonexistent-email@example.com");
-
-            // Assert
-            ClassicAssert.IsNull(result);
-        }
         [Test]
         public void CreateUpdateCandidateAsync_InvalidEmail_ThrowsArgumentException()
         {
