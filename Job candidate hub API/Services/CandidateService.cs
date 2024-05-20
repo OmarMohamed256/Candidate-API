@@ -1,4 +1,5 @@
-﻿using Job_candidate_hub_API.Mapper;
+﻿using Job_candidate_hub_API.Errors;
+using Job_candidate_hub_API.Mapper;
 using Job_candidate_hub_API.Models.DTOs;
 using Job_candidate_hub_API.Repositories;
 using Job_candidate_hub_API.Utilities;
@@ -15,10 +16,10 @@ namespace Job_candidate_hub_API.Services
         public async Task<CandidateDto> CreateUpdateCandidateAsync(CandidateDto candidateDto)
         {
             if (candidateDto == null || string.IsNullOrWhiteSpace(candidateDto.Email))
-                throw new ArgumentException("Candidate DTO cannot be null or empty", nameof(candidateDto));
-            
-            if (!RegexUtilities.IsValidEmail(candidateDto.Email)) 
-                throw new ArgumentException("Invalid email format", nameof(candidateDto.Email));
+                throw new BadRequestException("Candidate DTO cannot be null or empty");
+
+            if (!RegexUtilities.IsValidEmail(candidateDto.Email))
+                throw new BadRequestException("Invalid email format");
 
             var existingCandidate = await _candidateRepository.GetCandidateByEmailAsync(candidateDto.Email);
 
@@ -31,7 +32,7 @@ namespace Job_candidate_hub_API.Services
                 existingCandidate.LinkedInProfileUrl = candidateDto.LinkedInProfileUrl;
                 existingCandidate.GitHubProfileUrl = candidateDto.GitHubProfileUrl;
                 existingCandidate.Comment = candidateDto.Comment;
-                
+
                 _candidateRepository.UpdateCandidate(existingCandidate);
             }
             else
@@ -39,7 +40,7 @@ namespace Job_candidate_hub_API.Services
 
             var result = await _candidateRepository.SaveAllAsync();
             if (result) return candidateDto;
-            throw new ArgumentException("Failed to add/update candidate");
+            throw new BadRequestException("Failed to add/update candidate");
         }
     }
 }

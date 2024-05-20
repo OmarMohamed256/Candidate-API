@@ -1,4 +1,5 @@
 using Job_candidate_hub_API.Data;
+using Job_candidate_hub_API.Middleware;
 using Job_candidate_hub_API.Repositories;
 using Job_candidate_hub_API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

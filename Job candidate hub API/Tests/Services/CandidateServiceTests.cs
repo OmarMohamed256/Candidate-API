@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Moq;
 using Job_candidate_hub_API.Models;
 using NUnit.Framework.Legacy;
+using Job_candidate_hub_API.Errors;
 
 namespace Job_candidate_hub_API.Tests.Services
 {
@@ -36,16 +37,16 @@ namespace Job_candidate_hub_API.Tests.Services
             Assert.ThrowsAsync<ArgumentException>(async () => await _candidateService.CreateUpdateCandidateAsync(candidateDto));
         }
         [Test]
-        public void CreateUpdateCandidateAsync_EmptyCandidateDto_ThrowsArgumentException()
+        public void CreateUpdateCandidateAsync_EmptyCandidateDto_ThrowsBadRequestException()
         {
             // Arrange
             var candidateDto = new CandidateDto();
             // Act & Assert
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _candidateService.CreateUpdateCandidateAsync(candidateDto));
-            Assert.That(ex.Message, Does.StartWith("Candidate DTO cannot be null or empty"));
+            var ex = Assert.ThrowsAsync<BadRequestException>(() => _candidateService.CreateUpdateCandidateAsync(candidateDto));
+            ClassicAssert.AreEqual(ex.Message, "Candidate DTO cannot be null or empty");
         }
         [Test]
-        public void CreateUpdateCandidateAsync_EmptyEmail_ThrowsArgumentException()
+        public void CreateUpdateCandidateAsync_EmptyEmail_ThrowsBadRequestException()
         {
             // Arrange
             var candidateDto = new CandidateDto
@@ -54,8 +55,8 @@ namespace Job_candidate_hub_API.Tests.Services
                 LastName = "Doe",
                 PhoneNumber = "1234567890",
             };
-            var ex = Assert.ThrowsAsync<ArgumentException>(() => _candidateService.CreateUpdateCandidateAsync(candidateDto));
-            Assert.That(ex.Message, Does.StartWith("Candidate DTO cannot be null or empty"));
+            var ex = Assert.ThrowsAsync<BadRequestException>(() => _candidateService.CreateUpdateCandidateAsync(candidateDto));
+            ClassicAssert.AreEqual(ex.Message, "Candidate DTO cannot be null or empty");
         }
         [Test]
         public async Task CreateUpdateCandidateAsync_UpdatesExistingCandidate_WhenCandidateExists()
